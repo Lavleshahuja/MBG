@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AMBG UK · Employee Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:     #0a0010;
+  --violet:   #3d0070;
+  --purple:   #6600cc;
+  --bright:   #8800ff;
+  --electric: #7700ee;
+  --purple-lt:#f3e8ff;
+  --purple-md:#e4ccff;
+  --body-bg:  #f7f5fc;
+  --surface:  #ffffff;
+  --text:     #1a1025;
+  --text-2:   #5a5070;
+  --border:   #e4d9f5;
+  --border-s: #d0bef0;
+  --radius:   10px;
+  --shadow:   0 1px 4px rgba(102,0,204,0.07), 0 4px 16px rgba(102,0,204,0.05);
+}
+
+body { font-family: 'Barlow', sans-serif; background: var(--body-bg); color: var(--text); min-height: 100vh; }
+
+/* ── CHEVRON ── */
+.chevron-bg {
+  position: absolute; right: 0; top: 0; height: 100%; width: 60%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 600' preserveAspectRatio='xMidYMid slice'%3E%3Cpolyline points='200,20 560,300 200,580' fill='none' stroke='white' stroke-width='28' stroke-linejoin='round' stroke-linecap='round' opacity='0.15'/%3E%3Cpolyline points='100,20 460,300 100,580' fill='none' stroke='white' stroke-width='18' stroke-linejoin='round' stroke-linecap='round' opacity='0.07'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-size: cover; pointer-events: none;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--navy); border-bottom: 1px solid rgba(136,0,255,0.3);
+  padding: 0 40px; display: flex; align-items: center; height: 56px; gap: 28px;
+  position: sticky; top: 0; z-index: 100;
+}
+.nav-logo { display: flex; align-items: center; gap: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; color: #fff; cursor: pointer; flex-shrink: 0; }
+.nav-logo .acc-chevron { color: var(--bright); font-size: 22px; }
+.nav-links { display: flex; gap: 2px; flex: 1; }
+.nav-link { color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; padding: 6px 13px; border-radius: 6px; cursor: pointer; transition: background .15s, color .15s; border: none; background: none; font-family: 'Barlow', sans-serif; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(136,0,255,0.3); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; }
+.nav-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--purple), var(--bright)); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── HERO — stays dark, brand ── */
+.hero {
+  background: linear-gradient(110deg, var(--navy) 0%, #2a0050 35%, var(--violet) 68%, var(--bright) 100%);
+  padding: 32px 40px; position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 340px; align-items: center; gap: 32px;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 52px; font-weight: 900; line-height: 1.0; letter-spacing: -0.5px; color: #fff; margin-bottom: 14px; text-transform: uppercase; }
+.hero p { font-size: 14.5px; color: rgba(255,255,255,0.76); line-height: 1.65; max-width: 440px; margin-bottom: 24px; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary { background: #fff; color: var(--violet); padding: 10px 22px; border-radius: 6px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; font-family: 'Barlow', sans-serif; transition: opacity .15s; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-ghost { background: rgba(255,255,255,0.1); color: #fff; padding: 10px 22px; border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.28); cursor: pointer; font-family: 'Barlow', sans-serif; transition: background .15s; }
+.btn-ghost:hover { background: rgba(255,255,255,0.18); }
+.hero-stats { display: flex; gap: 36px; margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.14); }
+.hero-stat span { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 800; color: #fff; }
+.hero-stat small { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+/* ── SECTIONS ── */
+.section { padding: 40px 40px; }
+.section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: 0.2px; color: var(--text); margin-bottom: 4px; text-transform: uppercase; }
+.section-sub { font-size: 13px; color: var(--text-2); margin-bottom: 22px; }
+.section-divider { border: none; border-top: 1px solid var(--border); margin: 0 40px; }
+
+/* ── QUICK LINKS ── */
+.quick-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.quick-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text); transition: border-color .15s, box-shadow .15s; box-shadow: var(--shadow); }
+.quick-chip:hover { border-color: var(--electric); color: var(--electric); box-shadow: 0 2px 12px rgba(102,0,204,0.12); }
+.quick-chip span { font-size: 17px; }
+
+/* ── HUB GRID ── */
+.hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.hub-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; cursor: pointer; transition: box-shadow .18s, border-color .18s, transform .18s; display: flex; flex-direction: column; gap: 9px; position: relative; overflow: hidden; box-shadow: var(--shadow); }
+.hub-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--bright), var(--purple)); opacity: 0; transition: opacity .18s; }
+.hub-card:hover { box-shadow: 0 4px 20px rgba(102,0,204,0.14); border-color: var(--border-s); transform: translateY(-1px); }
+.hub-card:hover::before { opacity: 1; }
+.hub-icon { font-size: 24px; margin-bottom: 2px; }
+.hub-card h3 { font-size: 14px; font-weight: 700; color: var(--text); }
+.hub-card p { font-size: 12.5px; color: var(--text-2); line-height: 1.55; }
+.hub-card-arrow { margin-top: auto; font-size: 12px; font-weight: 600; color: var(--electric); }
+
+/* ── NEWS ── */
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.news-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: box-shadow .18s, border-color .18s; box-shadow: var(--shadow); }
+.news-card:hover { box-shadow: 0 4px 20px rgba(102,0,204,0.12); border-color: var(--border-s); }
+.news-stripe { height: 4px; background: linear-gradient(90deg, var(--purple), var(--bright)); }
+.news-body { padding: 18px; }
+.news-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 20px; display: inline-block; margin-bottom: 9px; background: var(--purple-lt); color: var(--electric); border: 1px solid var(--purple-md); }
+.news-card h4 { font-size: 13.5px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; color: var(--text); }
+.news-card p { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.news-meta { font-size: 11px; color: #b0a0c8; margin-top: 10px; }
+
+/* ── EVENTS ROW ── */
+.ev-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: box-shadow .15s, border-color .15s; box-shadow: var(--shadow); }
+.ev-card:hover { box-shadow: 0 4px 20px rgba(102,0,204,0.12); border-color: var(--border-s); }
+.ev-date-box { background: var(--purple-lt); border: 1px solid var(--purple-md); border-radius: 8px; padding: 8px 10px; text-align: center; flex-shrink: 0; }
+.ev-date-box strong { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--electric); line-height: 1; }
+.ev-date-box small { font-size: 9px; color: var(--electric); letter-spacing: 0.5px; }
+
+/* ── OB HERO — stays dark ── */
+.ob-hero { background: linear-gradient(110deg, var(--navy) 0%, #2a0050 35%, var(--violet) 70%, var(--bright) 100%); padding: 36px 40px 32px; position: relative; overflow: hidden; }
+.ob-breadcrumb { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.ob-breadcrumb:hover { color: rgba(255,255,255,0.85); }
+.ob-hero h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; color: #fff; }
+.ob-hero p { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 520px; line-height: 1.65; }
+
+/* ── OB TABS — white bg ── */
+.ob-tabs { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; position: sticky; top: 56px; z-index: 90; box-shadow: 0 1px 4px rgba(102,0,204,0.06); }
+.ob-tab { padding: 13px 18px; font-size: 13px; font-weight: 500; color: var(--text-2); cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; transition: color .15s, border-color .15s; font-family: 'Barlow', sans-serif; }
+.ob-tab.active { color: var(--electric); border-bottom-color: var(--electric); font-weight: 700; }
+.ob-tab:hover { color: var(--text); }
+
+/* ── OB BODY ── */
+.ob-body { padding: 28px 40px; display: grid; grid-template-columns: 1fr 290px; gap: 24px; align-items: start; }
+.ob-main { display: flex; flex-direction: column; gap: 16px; }
+.ob-section { display: none; }
+.ob-section.active { display: flex; flex-direction: column; gap: 16px; }
+
+/* ── WHITE CARDS ── */
+.dark-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+.dark-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 16px; color: var(--text); }
+
+/* ── JOURNEY ── */
+.journey-steps { display: flex; align-items: flex-start; }
+.journey-step { flex: 1; text-align: center; position: relative; }
+.journey-step::before { content: ''; position: absolute; top: 17px; left: 50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+.journey-step:last-child::before { display: none; }
+.j-dot { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--purple), var(--bright)); color: #fff; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; position: relative; z-index: 1; margin-bottom: 8px; font-family: 'Barlow Condensed', sans-serif; }
+.journey-step.done .j-dot { background: linear-gradient(135deg, #0f6e56, #22c997); }
+.journey-step.upcoming .j-dot { background: var(--purple-lt); color: #b090d0; border: 1px solid var(--purple-md); }
+.j-label { font-size: 11px; font-weight: 700; color: var(--text); }
+.j-sub { font-size: 10px; color: var(--text-2); margin-top: 2px; }
+
+/* ── INFO GRID ── */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.info-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.info-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--purple-lt); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; border: 1px solid var(--purple-md); }
+.info-card h4 { font-size: 13px; font-weight: 700; color: var(--text); }
+.info-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.info-card ul li { font-size: 12px; color: var(--text-2); display: flex; align-items: flex-start; gap: 8px; line-height: 1.45; }
+.info-card ul li::before { content: '›'; color: var(--electric); font-size: 14px; flex-shrink: 0; line-height: 1.3; }
+
+/* ── CHECKLIST ── */
+.check-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.check-item:last-child { border-bottom: none; }
+.check-box { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--purple-md); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s; margin-top: 1px; }
+.check-box.checked { background: linear-gradient(135deg, var(--purple), var(--bright)); border-color: var(--bright); }
+.check-box.checked::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 800; }
+.check-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text); }
+.check-text span { font-size: 11.5px; color: var(--text-2); line-height: 1.45; }
+.prog-bar { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 16px; }
+.prog-fill { height: 3px; background: linear-gradient(90deg, var(--purple), var(--bright)); border-radius: 2px; width: 30%; }
+
+/* ── PEOPLE ── */
+.people-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.person-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; transition: box-shadow .15s, border-color .15s; box-shadow: var(--shadow); }
+.person-card:hover { box-shadow: 0 4px 16px rgba(102,0,204,0.1); border-color: var(--border-s); }
+.p-avatar { width: 46px; height: 46px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; font-family: 'Barlow Condensed', sans-serif; }
+.person-card h4 { font-size: 12.5px; font-weight: 700; color: var(--text); }
+.person-card span { font-size: 11px; color: var(--text-2); }
+.p-badge { display: inline-block; font-size: 10px; font-weight: 600; margin-top: 6px; padding: 2px 9px; border-radius: 20px; background: var(--purple-lt); color: var(--electric); border: 1px solid var(--purple-md); }
+
+/* ── CERT ── */
+.cert-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; color: var(--text); }
+.cert-item:last-child { border-bottom: none; }
+.cert-pill { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+.cert-start { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.cert-mid { background: var(--purple-lt); color: var(--electric); border: 1px solid var(--purple-md); }
+.cert-adv { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+/* ── SIDEBAR ── */
+.ob-sidebar { display: flex; flex-direction: column; gap: 14px; }
+.copilot-cta { background: linear-gradient(135deg, var(--navy) 0%, var(--violet) 50%, var(--bright) 100%); border-radius: var(--radius); padding: 20px; color: #fff; text-align: center; position: relative; overflow: hidden; }
+.copilot-cta .chevron-dec { position: absolute; right: -10px; top: 0; bottom: 0; width: 60%; opacity: 0.1; font-family: 'Barlow Condensed', sans-serif; font-size: 180px; font-weight: 900; color: white; display: flex; align-items: center; line-height: 1; pointer-events: none; }
+.copilot-cta .co-icon { font-size: 26px; margin-bottom: 8px; position: relative; }
+.copilot-cta h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; position: relative; }
+.copilot-cta p { font-size: 11.5px; color: rgba(255,255,255,0.78); margin-bottom: 14px; line-height: 1.5; position: relative; }
+.copilot-cta button { background: #fff; color: var(--violet); border: none; border-radius: 6px; padding: 9px 18px; font-size: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: 'Barlow', sans-serif; position: relative; }
+
+.sidebar-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.sidebar-card h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 14px; color: var(--text); letter-spacing: 0.3px; }
+.event-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.event-item:last-child { border-bottom: none; }
+.event-date { width: 38px; text-align: center; background: var(--purple-lt); border: 1px solid var(--purple-md); border-radius: 6px; padding: 4px 2px; flex-shrink: 0; }
+.event-date strong { display: block; font-size: 16px; font-weight: 800; color: var(--electric); line-height: 1; font-family: 'Barlow Condensed', sans-serif; }
+.event-date small { font-size: 9px; color: var(--electric); letter-spacing: 0.5px; }
+.event-info strong { display: block; font-size: 12px; font-weight: 600; color: var(--text); }
+.event-info span { font-size: 11px; color: var(--text-2); }
+
+/* ── FOOTER ── */
+.footer { background: var(--navy); border-top: 1px solid rgba(136,0,255,0.2); color: rgba(255,255,255,0.3); text-align: center; padding: 20px 40px; font-size: 11.5px; margin-top: 32px; }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <div class="nav-logo" onclick="showPage('home')">
+    <span class="acc-chevron">›</span> AMBG UK
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home');setActive(this)">Home</button>
+    <button class="nav-link" onclick="showPage('onboarding');setActive(this)">Onboarding</button>
+    <button class="nav-link" onclick="setActive(this)">Practices</button>
+    <button class="nav-link" onclick="setActive(this)">People</button>
+    <button class="nav-link" onclick="setActive(this)">Learning</button>
+    <button class="nav-link" onclick="setActive(this)">Events</button>
+    <button class="nav-link" onclick="setActive(this)">News & Wins</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-avatar">AK</div>
+  </div>
+</nav>
+
+<!-- ══════════════ HOME ══════════════ -->
+<div id="page-home" class="page active">
+
+  <div class="hero">
+    <div class="chevron-bg"></div>
+    <div class="hero-content">
+      <h1>AMBG UK<br>Employee Hub</h1>
+      <p>One place to connect with your colleagues, stay across what's happening, and find everything you need — whether you joined yesterday or you've been here for years.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('onboarding');document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.querySelector('.nav-link:nth-child(2)').classList.add('active')">New to AMBG? Start here</button>
+        <button class="btn-ghost">Latest wins</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span>340+</span><small>UK employees</small></div>
+        <div class="hero-stat"><span>6</span><small>Practice areas</small></div>
+        <div class="hero-stat"><span>12</span><small>New joiners this quarter</small></div>
+      </div>
+    </div>
+    <div style="position:relative;z-index:2;">
+      <div onclick="document.getElementById('welcome-modal').style.display='flex'" style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.2);border-radius:12px;overflow:hidden;cursor:pointer;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;backdrop-filter:blur(4px);">
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(61,0,112,0.55),rgba(136,0,255,0.25));"></div>
+        <div style="position:relative;z-index:1;text-align:center;">
+          <div style="width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 0 0 8px rgba(255,255,255,0.15);">
+            <div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #3d0070;margin-left:3px;"></div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#fff;">WELCOME MESSAGE</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">Sarah Chen · AMBG UK Lead · 2 min</div>
+        </div>
+      </div>
+      <div style="margin-top:9px;text-align:center;font-size:11px;color:rgba(255,255,255,0.45);">Click to watch Sarah's welcome to the team</div>
+    </div>
+  </div>
+
+  <!-- VIDEO MODAL -->
+  <div id="welcome-modal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+    <div style="background:#fff;border-radius:14px;padding:28px;max-width:620px;width:90%;position:relative;">
+      <button onclick="document.getElementById('welcome-modal').style.display='none'" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#999;font-size:22px;cursor:pointer;">×</button>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;color:var(--text);margin-bottom:4px;">Welcome to AMBG UK</div>
+      <div style="font-size:12px;color:var(--text-2);margin-bottom:16px;">Sarah Chen, AMBG UK Lead</div>
+      <div style="background:#f7f5fc;border-radius:8px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
+        <div style="text-align:center;">
+          <div style="font-size:40px;margin-bottom:10px;">🎬</div>
+          <div style="font-size:13px;color:var(--text-2);">Video placeholder — replace with your SharePoint Stream URL</div>
+          <div style="font-size:11px;color:#b0a0c8;margin-top:6px;">Supports MP4, SharePoint Stream, or YouTube embed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-bottom:0;">
+    <div class="section-title">Quick access</div>
+    <div class="section-sub">The things people use most</div>
+    <div class="quick-row">
+      <div class="quick-chip"><span>🗂️</span> MyTE Timesheets</div>
+      <div class="quick-chip"><span>🎓</span> My Learning</div>
+      <div class="quick-chip"><span>💬</span> AMBG Teams Channel</div>
+      <div class="quick-chip"><span>🏆</span> Client Showcase</div>
+      <div class="quick-chip"><span>🤖</span> M365 Copilot</div>
+      <div class="quick-chip"><span>📊</span> Power BI Hub</div>
+      <div class="quick-chip"><span>🔐</span> IT Support</div>
+      <div class="quick-chip"><span>💰</span> Concur Expenses</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Explore AMBG UK</div>
+    <div class="section-sub">Everything you need, organised by topic</div>
+    <div class="hub-grid">
+      <div class="hub-card" onclick="showPage('onboarding');document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.querySelector('.nav-link:nth-child(2)').classList.add('active')">
+        <div class="hub-icon">👋</div><h3>New Joiner Onboarding</h3>
+        <p>Your complete guide to getting started — from day one through your first 90 days.</p>
+        <div class="hub-card-arrow">Go to onboarding ›</div>
+      </div>
+      <div class="hub-card"><div class="hub-icon">🏗️</div><h3>Practice Areas</h3><p>Azure, Modern Work, Security, Data & AI, Business Applications, and Digital & App Innovation.</p><div class="hub-card-arrow">Explore practices ›</div></div>
+      <div class="hub-card"><div class="hub-icon">👥</div><h3>People Directory</h3><p>Who leads what, who to call for what, and how to get connected across the group.</p><div class="hub-card-arrow">Find people ›</div></div>
+      <div class="hub-card"><div class="hub-icon">🎓</div><h3>Learning & Certifications</h3><p>Microsoft certification paths, Accenture training, and curated journeys by practice.</p><div class="hub-card-arrow">Start learning ›</div></div>
+      <div class="hub-card"><div class="hub-icon">🏆</div><h3>Wins & Case Studies</h3><p>Our latest client wins, deal highlights, and reference stories for bids and proposals.</p><div class="hub-card-arrow">View wins ›</div></div>
+      <div class="hub-card"><div class="hub-icon">📣</div><h3>Events & All-Hands</h3><p>Practice calls, all-hands recordings, social events, and Microsoft partner events.</p><div class="hub-card-arrow">See events ›</div></div>
+      <div class="hub-card"><div class="hub-icon">💼</div><h3>Bid & Proposal Support</h3><p>Templates, past proposals, RFP support contacts, and approved client reference stories.</p><div class="hub-card-arrow">Access library ›</div></div>
+      <div class="hub-card"><div class="hub-icon">🤖</div><h3>AMBG Copilot Agent</h3><p>Ask anything about AMBG UK — your AI assistant knows our people, processes and content.</p><div class="hub-card-arrow">Open Copilot ›</div></div>
+      <div class="hub-card"><div class="hub-icon">🌱</div><h3>Wellbeing & Community</h3><p>DEI networks, wellbeing resources, social clubs, and the AMBG UK community calendar.</p><div class="hub-card-arrow">Explore community ›</div></div>
+    </div>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <div class="section" style="padding-top:32px;">
+    <div class="section-title">Latest from AMBG UK</div>
+    <div class="section-sub">News, wins and updates from across the group</div>
+    <div class="news-grid">
+      <div class="news-card"><div class="news-stripe"></div><div class="news-body"><span class="news-tag">Win</span><h4>AMBG secures £8m Azure AI engagement with a major UK bank</h4><p>Our Data & AI practice has closed a landmark deal to modernise the client's data estate using Azure OpenAI.</p><div class="news-meta">James O'Brien · 2 Oct 2026</div></div></div>
+      <div class="news-card"><div class="news-stripe"></div><div class="news-body"><span class="news-tag">All-hands</span><h4>Q3 AMBG UK All-Hands — recording now available</h4><p>Watch back the full session including strategy update, recognition awards and Q&A with Sarah Chen.</p><div class="news-meta">Sarah Chen · 28 Sep 2026</div></div></div>
+      <div class="news-card"><div class="news-stripe"></div><div class="news-body"><span class="news-tag">New joiners</span><h4>Welcome to our Q3 cohort — 12 new joiners across 4 practices</h4><p>Please join us in welcoming the latest additions to AMBG UK. Find out who's joined and who to connect with.</p><div class="news-meta">Priya Rao · 1 Oct 2026</div></div></div>
+    </div>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <div class="section" style="padding-top:32px;">
+    <div class="section-title">Upcoming events</div>
+    <div class="section-sub">Key moments across AMBG UK — save the dates</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+      <div class="ev-card">
+        <div style="display:flex;align-items:center;gap:12px;"><div class="ev-date-box"><strong>16</strong><small>OCT</small></div><div><div style="font-size:13px;font-weight:700;color:var(--text);">AMBG UK All-Hands</div><div style="font-size:11px;color:var(--text-2);margin-top:2px;">3pm · Teams</div></div></div>
+        <div style="font-size:11.5px;color:var(--text-2);line-height:1.5;">Monthly update from Sarah Chen — strategy, wins, and Q&A.</div>
+        <div style="font-size:11px;font-weight:600;color:var(--electric);">Add to calendar ›</div>
+      </div>
+      <div class="ev-card">
+        <div style="display:flex;align-items:center;gap:12px;"><div class="ev-date-box"><strong>22</strong><small>OCT</small></div><div><div style="font-size:13px;font-weight:700;color:var(--text);">MBG Townhall</div><div style="font-size:11px;color:var(--text-2);margin-top:2px;">10am · London · Hybrid</div></div></div>
+        <div style="font-size:11.5px;color:var(--text-2);line-height:1.5;">Quarterly MBG townhall with group leadership — priority for all staff.</div>
+        <div style="font-size:11px;font-weight:600;color:var(--electric);">Add to calendar ›</div>
+      </div>
+      <div class="ev-card">
+        <div style="display:flex;align-items:center;gap:12px;"><div class="ev-date-box"><strong>5</strong><small>NOV</small></div><div><div style="font-size:13px;font-weight:700;color:var(--text);">UKI Microsoft Tour</div><div style="font-size:11px;color:var(--text-2);margin-top:2px;">9am · Microsoft Paddington</div></div></div>
+        <div style="font-size:11.5px;color:var(--text-2);line-height:1.5;">Tour of Microsoft UK HQ with demos from product teams and partner briefings.</div>
+        <div style="font-size:11px;font-weight:600;color:var(--electric);">Register interest ›</div>
+      </div>
+      <div class="ev-card">
+        <div style="display:flex;align-items:center;gap:12px;"><div class="ev-date-box"><strong>18</strong><small>NOV</small></div><div><div style="font-size:13px;font-weight:700;color:var(--text);">Microsoft Ignite Watch Party</div><div style="font-size:11px;color:var(--text-2);margin-top:2px;">2pm · Canary Wharf office</div></div></div>
+        <div style="font-size:11.5px;color:var(--text-2);line-height:1.5;">Join the team to watch Microsoft Ignite keynotes live with discussion and drinks.</div>
+        <div style="font-size:11px;font-weight:600;color:var(--electric);">Sign up ›</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Accenture Microsoft Business Group UK · Internal use only · Working prototype</div>
+</div>
+
+
+<!-- ══════════════ ONBOARDING ══════════════ -->
+<div id="page-onboarding" class="page">
+
+  <div class="ob-hero">
+    <div class="chevron-bg"></div>
+    <div style="position:relative;z-index:2;">
+      <div class="ob-breadcrumb" onclick="showPage('home')">← Back to AMBG UK Hub</div>
+      <h1>👋 Welcome to AMBG UK</h1>
+      <p>Everything you need for your first 90 days — who to know, what to do, and how AMBG works. Work through each section at your own pace.</p>
+    </div>
+  </div>
+
+  <div class="ob-tabs">
+    <div class="ob-tab active" onclick="showObSection('overview',this)">Overview</div>
+    <div class="ob-tab" onclick="showObSection('week1',this)">Week 1 checklist</div>
+    <div class="ob-tab" onclick="showObSection('people',this)">Who's who</div>
+    <div class="ob-tab" onclick="showObSection('practices',this)">Our practices</div>
+    <div class="ob-tab" onclick="showObSection('tools',this)">Tools & access</div>
+    <div class="ob-tab" onclick="showObSection('learning',this)">Learning path</div>
+    <div class="ob-tab" onclick="showObSection('culture',this)">Culture & ways of working</div>
+  </div>
+
+  <div class="ob-body">
+    <div class="ob-main">
+
+      <!-- OVERVIEW -->
+      <div id="ob-overview" class="ob-section active">
+        <div class="dark-card">
+          <h3>Your first 90 days</h3>
+          <div class="journey-steps">
+            <div class="journey-step done"><div class="j-dot">✓</div><div class="j-label">Day 1</div><div class="j-sub">You're here!</div></div>
+            <div class="journey-step"><div class="j-dot">1</div><div class="j-label">Week 1</div><div class="j-sub">Get set up</div></div>
+            <div class="journey-step upcoming"><div class="j-dot">2</div><div class="j-label">Month 1</div><div class="j-sub">Meet the team</div></div>
+            <div class="journey-step upcoming"><div class="j-dot">3</div><div class="j-label">Month 2</div><div class="j-sub">Find your role</div></div>
+            <div class="journey-step upcoming"><div class="j-dot">4</div><div class="j-label">Month 3</div><div class="j-sub">Deliver impact</div></div>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">📋</div><h4>In your first week</h4></div><ul><li>Complete system access requests</li><li>Set up MyTE for timesheets</li><li>Meet your buddy and line manager</li><li>Join AMBG UK Teams channels</li><li>Attend the new joiner welcome call</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🤝</div><h4>In your first month</h4></div><ul><li>Understand your practice's go-to-market</li><li>Shadow a client engagement or bid</li><li>Complete AZ-900 or MS-900</li><li>Meet leads across all 6 practices</li><li>Attend a practice all-hands</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🚀</div><h4>By month 3</h4></div><ul><li>Contributing on a live engagement</li><li>Complete your role-aligned certification</li><li>Know AMBG's key client relationships</li><li>Know who to call for what</li><li>First performance check-in done</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">💡</div><h4>Good to know</h4></div><ul><li>All-hands is monthly — check calendar</li><li>Timesheets are due every Friday in MyTE</li><li>Your buddy is your first informal call</li><li>Ask your MD to intro you via email</li><li>Use Copilot agent for quick answers 24/7</li></ul></div>
+        </div>
+      </div>
+
+      <!-- WEEK 1 -->
+      <div id="ob-week1" class="ob-section">
+        <div class="dark-card">
+          <h3 style="display:flex;justify-content:space-between;align-items:center;">Week 1 checklist <span style="font-size:12px;font-weight:400;color:var(--text-2);text-transform:none;font-family:'Barlow',sans-serif;">3 of 10 done</span></h3>
+          <div class="prog-bar"><div class="prog-fill"></div></div>
+          <div class="check-item"><div class="check-box checked" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Attend new joiner welcome session</strong><span>Organised by Priya Rao — invite sent to your calendar</span></div></div>
+          <div class="check-item"><div class="check-box checked" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Set up Accenture email and M365 profile</strong><span>IT support: it.support@accenture.com or raise a ticket in ServiceNow</span></div></div>
+          <div class="check-item"><div class="check-box checked" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Meet your buddy</strong><span>Your go-to for anything informal — Priya will have made the intro</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Complete MyTE timesheet setup</strong><span>Timesheets are mandatory every Friday — ask your DM for your project code</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Request Azure Portal access</strong><span>Raise via the IT portal — your practice lead approves Azure subscriptions</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Join AMBG UK Teams channels</strong><span>General, your practice channel, and #ambg-social</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>1:1 with your line manager</strong><span>Agree first 30-day goals and confirm your current engagement</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Enrol in AZ-900 or MS-900</strong><span>Access via Accenture My Learning — vouchers provided by your practice lead</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Read the AMBG UK one-pager</strong><span>Our strategy, priorities and key client relationships for this financial year</span></div></div>
+          <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text"><strong>Add AMBG all-hands to your calendar</strong><span>Monthly on the last Thursday — recurring invite in the AMBG shared calendar</span></div></div>
+        </div>
+      </div>
+
+      <!-- PEOPLE -->
+      <div id="ob-people" class="ob-section">
+        <div class="dark-card">
+          <h3>AMBG UK Leadership</h3>
+          <div class="people-grid">
+            <div class="person-card"><div class="p-avatar" style="background:linear-gradient(135deg,#3d0070,#8800ff);">SC</div><h4>Sarah Chen</h4><span>AMBG UK Lead & MD</span><div class="p-badge">Your MD</div></div>
+            <div class="person-card"><div class="p-avatar" style="background:linear-gradient(135deg,#6600cc,#a020f0);">JO</div><h4>James O'Brien</h4><span>Azure Practice Lead</span><div class="p-badge">Practice Lead</div></div>
+            <div class="person-card"><div class="p-avatar" style="background:linear-gradient(135deg,#0f6e56,#22c997);">PR</div><h4>Priya Rao</h4><span>People & Talent</span><div class="p-badge">Your HR contact</div></div>
+            <div class="person-card"><div class="p-avatar" style="background:linear-gradient(135deg,#7a3800,#c8760a);">MK</div><h4>Marcus Kelly</h4><span>Modern Work Lead</span><div class="p-badge">Practice Lead</div></div>
+            <div class="person-card"><div class="p-avatar" style="background:linear-gradient(135deg,#7a0000,#c0392b);">RP</div><h4>Riya Patel</h4><span>Security Practice Lead</span><div class="p-badge">Practice Lead</div></div>
+            <div class="person-card"><div class="p-avatar" style="background:linear-gradient(135deg,#0a1f44,#0078d4);">DW</div><h4>Dan Williams</h4><span>Data & AI Practice Lead</span><div class="p-badge">Practice Lead</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRACTICES -->
+      <div id="ob-practices" class="ob-section">
+        <div class="info-grid">
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">☁️</div><h4>Azure Infrastructure</h4></div><ul><li>Cloud migrations & landing zones</li><li>Azure VMware Solution</li><li>Hybrid & multi-cloud architecture</li><li>FinOps & cost optimisation</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🤖</div><h4>Data & AI</h4></div><ul><li>Azure OpenAI & Copilot solutions</li><li>Microsoft Fabric & analytics</li><li>Responsible AI frameworks</li><li>Data estate modernisation</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">💼</div><h4>Modern Work</h4></div><ul><li>M365 & Teams deployments</li><li>Copilot for M365 adoption</li><li>Viva & employee experience</li><li>Managed modern work services</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🔐</div><h4>Security</h4></div><ul><li>Microsoft Sentinel & Defender</li><li>Zero Trust architecture</li><li>Identity & access management</li><li>Compliance & governance</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">📊</div><h4>Business Applications</h4></div><ul><li>Dynamics 365 CRM & ERP</li><li>Power Platform & low-code</li><li>Finance & Supply Chain</li><li>Field Service & Customer Insights</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">⚡</div><h4>Digital & App Innovation</h4></div><ul><li>Azure-native app development</li><li>API & integration platforms</li><li>DevOps & platform engineering</li><li>GitHub Advanced Security</li></ul></div>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div id="ob-tools" class="ob-section">
+        <div class="info-grid">
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🖥️</div><h4>Core platforms</h4></div><ul><li>Microsoft 365 (email, Teams, SharePoint)</li><li>Azure Portal — raise access via IT portal</li><li>GitHub Enterprise — practice lead approves</li><li>Power BI — automatic with M365 licence</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">💰</div><h4>Finance & time</h4></div><ul><li>MyTE — weekly timesheets, due Friday</li><li>Concur — expenses, receipts within 30 days</li><li>Workday — HR, payslips, leave requests</li><li>Ask your DM for your project code on day 1</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🤝</div><h4>Collaboration</h4></div><ul><li>Teams — main hub for AMBG comms</li><li>Viva Engage — company-wide news feed</li><li>Mural / Miro — workshops and ideation</li><li>Zoom — external client calls where needed</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🎓</div><h4>Learning</h4></div><ul><li>Accenture My Learning — all training</li><li>Microsoft Learn — cert prep, free access</li><li>LinkedIn Learning — included in benefits</li><li>Ask practice lead for exam vouchers</li></ul></div>
+        </div>
+      </div>
+
+      <!-- LEARNING -->
+      <div id="ob-learning" class="ob-section">
+        <div class="dark-card">
+          <h3>Recommended certification path</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+            <div class="cert-item"><span>AZ-900 · Azure Fundamentals</span><span class="cert-pill cert-start">Start here · All roles</span></div>
+            <div class="cert-item"><span>MS-900 · Microsoft 365 Fundamentals</span><span class="cert-pill cert-start">Start here · Modern Work</span></div>
+            <div class="cert-item"><span>AZ-104 · Azure Administrator</span><span class="cert-pill cert-mid">Month 1–2 · Azure</span></div>
+            <div class="cert-item"><span>AI-102 · Azure AI Engineer</span><span class="cert-pill cert-mid">Month 1–2 · Data & AI</span></div>
+            <div class="cert-item"><span>SC-200 · Security Operations Analyst</span><span class="cert-pill cert-mid">Month 1–2 · Security</span></div>
+            <div class="cert-item"><span>PL-900 · Power Platform Fundamentals</span><span class="cert-pill cert-mid">Month 1–2 · Biz Apps</span></div>
+            <div class="cert-item"><span>AZ-305 · Azure Solutions Architect</span><span class="cert-pill cert-adv">Month 3+ · Senior roles</span></div>
+            <div class="cert-item"><span>DP-600 · Microsoft Fabric Analytics Engineer</span><span class="cert-pill cert-adv">Month 3+ · Data & AI</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CULTURE -->
+      <div id="ob-culture" class="ob-section">
+        <div class="info-grid">
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🤝</div><h4>How we work</h4></div><ul><li>Hybrid — client site, home, and Canary Wharf</li><li>Core hours 9–5 but outcomes over presence</li><li>Camera on for internal calls is encouraged</li><li>Teams is the default — minimise email internally</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">🌱</div><h4>DEI & communities</h4></div><ul><li>AMBG Women in Tech network</li><li>Accenture Pride — active UK chapter</li><li>Mental Health First Aiders in every practice</li><li>Disability & neurodiversity support via HR</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">⭐</div><h4>Recognition</h4></div><ul><li>Applaud — peer recognition platform</li><li>AMBG monthly shout-outs at all-hands</li><li>Microsoft partner awards via practice lead</li><li>Year-end performance and promotion cycle</li></ul></div>
+          <div class="info-card"><div class="info-card-head"><div class="info-icon">📣</div><h4>Voice & feedback</h4></div><ul><li>Pulse survey — quarterly, anonymous</li><li>Open-door policy with all practice leads</li><li>New joiner feedback session at 90 days</li><li>Ideas? Drop them in #ambg-ideas on Teams</li></ul></div>
+        </div>
+      </div>
+
+    </div><!-- /ob-main -->
+
+    <!-- SIDEBAR -->
+    <div class="ob-sidebar">
+      <div class="copilot-cta">
+        <div class="chevron-dec">›</div>
+        <div class="co-icon">🤖</div>
+        <h4>AMBG Copilot</h4>
+        <p>Ask anything — from who to contact to how expenses work. Instant answers, 24/7.</p>
+        <button>Open Copilot ›</button>
+      </div>
+      <div class="sidebar-card">
+        <h4>Upcoming events</h4>
+        <div class="event-item"><div class="event-date"><strong>9</strong><small>Oct</small></div><div class="event-info"><strong>New joiner welcome call</strong><span>10am · Teams · Priya Rao</span></div></div>
+        <div class="event-item"><div class="event-date"><strong>16</strong><small>Oct</small></div><div class="event-info"><strong>AMBG UK All-Hands</strong><span>3pm · Teams · All welcome</span></div></div>
+        <div class="event-item"><div class="event-date"><strong>23</strong><small>Oct</small></div><div class="event-info"><strong>Azure Practice call</strong><span>11am · Teams · James O'Brien</span></div></div>
+      </div>
+      <div class="sidebar-card">
+        <h4>Your key contacts</h4>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+            <div style="width:38px;height:38px;min-width:38px;border-radius:50%;background:linear-gradient(135deg,#3d0070,#8800ff);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;">SC</div>
+            <div><div style="font-size:13px;font-weight:700;color:var(--text);">Sarah Chen</div><div style="font-size:11px;color:var(--text-2);">AMBG UK Lead</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+            <div style="width:38px;height:38px;min-width:38px;border-radius:50%;background:linear-gradient(135deg,#0f6e56,#22c997);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;">PR</div>
+            <div><div style="font-size:13px;font-weight:700;color:var(--text);">Priya Rao</div><div style="font-size:11px;color:var(--text-2);">People & Talent</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;">
+            <div style="width:38px;height:38px;min-width:38px;border-radius:50%;background:linear-gradient(135deg,#6600cc,#a020f0);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;">JO</div>
+            <div><div style="font-size:13px;font-weight:700;color:var(--text);">James O'Brien</div><div style="font-size:11px;color:var(--text-2);">Azure Practice Lead</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Accenture Microsoft Business Group UK · Internal use only · Working prototype</div>
+</div>
+
+<script>
+  function showPage(page) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); window.scrollTo(0,0); }
+  function setActive(el) { document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); el.classList.add('active'); }
+  function showObSection(section,tab) { document.querySelectorAll('.ob-section').forEach(s=>s.classList.remove('active')); document.getElementById('ob-'+section).classList.add('active'); document.querySelectorAll('.ob-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); }
+  function toggleCheck(el) { el.classList.toggle('checked'); }
+</script>
+</body>
+</html>
